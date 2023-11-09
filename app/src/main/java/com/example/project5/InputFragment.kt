@@ -28,12 +28,12 @@ class InputFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_input, container, false)
         viewModel = ViewModelProvider(this).get(ViewModel::class.java)
 
+        println("Running input")
+
         val inputEditText = view.findViewById<EditText>(R.id.inputEditText)
 
         inputEditText.doAfterTextChanged {
-            println("Edit made")
             viewModel.userText.value = inputEditText.text.toString()
-            println("Value: " + viewModel.userText.value)
         }
 
         return view

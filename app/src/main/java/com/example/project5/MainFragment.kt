@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.lifecycle.Observer
@@ -33,54 +35,50 @@ class MainFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_main, container, false)
         viewModel = ViewModelProvider(this).get(ViewModel::class.java)
+        println("Running main")
 
         val sourceLanguageSelect = view.findViewById<RadioGroup>(R.id.sourceLanguageSelect)
         val translationSelect = view.findViewById<RadioGroup>(R.id.translationSelect)
         val translationTxt = view.findViewById<TextView>(R.id.translationTxt)
 
-        var sourceLanguageButton = sourceLanguageSelect.checkedRadioButtonId
-        var translationButton = translationSelect.checkedRadioButtonId
 
-        var boolEnglishSpanish = false
-        var boolEnglishGerman = false
-
-        val optionsEnglishSpanish = TranslatorOptions.Builder()
-            .setSourceLanguage(TranslateLanguage.ENGLISH)
-            .setTargetLanguage(TranslateLanguage.SPANISH)
-            .build()
-        val englishSpanishTranslator = Translation.getClient(optionsEnglishSpanish)
-
-        val optionsEnglishGerman = TranslatorOptions.Builder()
-            .setSourceLanguage(TranslateLanguage.ENGLISH)
-            .setTargetLanguage(TranslateLanguage.GERMAN)
-            .build()
-        val englishGermanTranslator = Translation.getClient(optionsEnglishGerman)
-
-        val downloadConditions = DownloadConditions.Builder()
-            .requireWifi()
-            .build()
-
-        englishSpanishTranslator.downloadModelIfNeeded(downloadConditions)
-            .addOnSuccessListener {
-                boolEnglishSpanish = true
+        sourceLanguageSelect.setOnCheckedChangeListener{ group, checkedId ->
+            println("Checked")
+            if(checkedId == R.id.sourceEnglish){
+                viewModel.sourceLanguage = "English"
+                println("Source " + viewModel.sourceLanguage)
             }
-            .addOnFailureListener {
-                boolEnglishSpanish = false
+            else if(checkedId == R.id.sourceSpanish){
+                viewModel.sourceLanguage = "Spanish"
+                println("Source " + viewModel.sourceLanguage)
             }
+            else if(checkedId == R.id.sourceGerman){
+                viewModel.sourceLanguage = "German"
+                println("Source " + viewModel.sourceLanguage)
+            }
+        }
 
-        englishGermanTranslator.downloadModelIfNeeded(downloadConditions)
-            .addOnSuccessListener {
-                boolEnglishGerman = true
+        translationSelect.setOnCheckedChangeListener{ group, checkedId ->
+            println("Checked")
+            if(checkedId == R.id.translationSpanish){
+                viewModel.targetLanguage = "Spanish"
+                println("Target " + viewModel.targetLanguage)
             }
-            .addOnFailureListener {
-                boolEnglishGerman = false
+            else if(checkedId == R.id.translationGerman){
+                viewModel.targetLanguage = "German"
+                println("Target " + viewModel.targetLanguage)
             }
+            else if(checkedId == R.id.translationEnglish){
+                viewModel.targetLanguage = "English"
+                println("Target " + viewModel.targetLanguage)
+            }
+        }
 
-            viewModel.userText.observe(viewLifecycleOwner, Observer {
-                println("Observed")
-                val inputText = it
-                translationTxt.text = inputText
-            })
+
+
+        viewModel.translation.observeForever {
+            translationTxt.text = viewModel.translation.toString()
+        }
 
         return view
     }
