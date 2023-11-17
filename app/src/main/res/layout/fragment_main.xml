@@ -97,16 +97,4 @@
         android:text="Translation" />
 
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainerView"
-        android:name="com.example.project5.InputFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        tools:layout="@layout/fragment_input">
-
-
-    </androidx.fragment.app.FragmentContainerView>
-
-
 </LinearLayout>
